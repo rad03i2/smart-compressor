@@ -1,237 +1,277 @@
+<div align="center">
+
+<img src="assets/project-cover.svg" alt="Smart Compressor — safe local archive toolkit by Radwan Abd alhady Ahmed" width="100%" />
+
+<br/>
+
 # Smart Compressor
 
-A safe, dependency-free local compression toolkit for files and directories, built with Python's standard library.
+### A dependency-free archive toolkit for safe local compression, inspection, and extraction
 
-**Author:** Radwan Abdulhadi Ahmed · رضوان عبدالهادي أحمد · GitHub: @rad03i2
+[![CI](https://github.com/rad03i2/smart-compressor/actions/workflows/ci.yml/badge.svg)](https://github.com/rad03i2/smart-compressor/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
+![Runtime](https://img.shields.io/badge/runtime-standard%20library-22D3D0)
+![Version](https://img.shields.io/badge/version-1.0.0-FF9D42)
+![Formats](https://img.shields.io/badge/formats-ZIP%20%7C%20TAR%20%7C%20GZ%20%7C%20BZ2%20%7C%20XZ-0C1B22)
+![License](https://img.shields.io/badge/license-MIT-F4F7F6)
 
-## English
+**[English guide](README_EN.md) · [الدليل العربي](README_AR.md) · [Architecture](docs/ARCHITECTURE.md) · [Brand](docs/BRAND.md) · [Security](SECURITY.md)**
 
-### Overview
-
-Smart Compressor provides one predictable CLI and Python API for creating, inspecting, and safely extracting common archives. It exists for users and scripts that need useful compression without cloud uploads, native binaries, or third-party runtime packages.
-
-### Features
-
-- Compress files or directories to ZIP.
-- Compress directories to `.tar.gz`, `.tar.bz2`, or `.tar.xz`.
-- Compress individual files to `.gz`, `.bz2`, or `.xz`.
-- Safely extract every supported format.
-- Inspect member count, packed size, unpacked size, and compression ratio without extraction.
-- Compression levels `0-9` where supported.
-- JSON output for automation.
-- Refuses accidental overwrite by default.
-- Atomic archive creation: writes a temporary file before replacing the destination.
-- Zip Slip / path-traversal protection during extraction.
-- Rejects TAR symlinks, hard links, devices, and special members.
-- No telemetry, network access, API keys, or runtime dependencies.
-
-### Requirements
-
-- Python 3.10 or newer.
-- No external compression programs are required.
-
-### Installation
-
-From a clone:
-
-```bash
-git clone https://github.com/rad03i2/smart-compressor.git
-cd smart-compressor
-python -m pip install -e .
-```
-
-### Usage
-
-```bash
-# ZIP a directory
-smart-compressor compress ./photos ./photos.zip
-
-# High-compression XZ TAR archive
-smart-compressor compress ./project ./project.tar.xz --level 9
-
-# Compress one file
-smart-compressor compress report.csv report.csv.gz --level 9
-
-# Inspect without extracting
-smart-compressor inspect ./photos.zip
-smart-compressor inspect ./photos.zip --json
-
-# Safe extraction
-smart-compressor extract ./photos.zip ./restored
-
-# Explicitly permit replacing existing outputs
-smart-compressor extract ./photos.zip ./restored --overwrite
-```
-
-The output format is inferred from the destination extension. Supported archive suffixes are `.zip`, `.tar.gz`/`.tgz`, `.tar.bz2`/`.tbz2`, `.tar.xz`/`.txz`, `.gz`, `.bz2`, and `.xz`. Single-stream `.gz`, `.bz2`, and `.xz` accept files only.
-
-### Python API
-
-```python
-from smart_compressor import compress, extract, inspect_archive
-
-info = compress("documents", "documents.zip", level=6)
-print(info.to_dict())
-extract("documents.zip", "restored")
-```
-
-### Configuration
-
-There is intentionally no configuration file or `.env` file. Behavior is explicit through CLI flags or Python function arguments. `--overwrite` is always opt-in.
-
-### Project structure
-
-```text
-src/smart_compressor/
-  __init__.py       Public API and metadata
-  core.py           Compression, inspection, safe extraction
-  cli.py            Command-line interface
-tests/test_core.py  Functional and security regression tests
-.github/workflows/ci.yml  Cross-platform CI
-```
-
-### Testing
-
-```bash
-python -m compileall -q src tests
-python -m unittest discover -s tests -v
-smart-compressor --version
-```
-
-CI runs the same validation across Python 3.10, 3.12, and 3.13 on Linux, Windows, and macOS.
-
-### Preview / screenshots
-
-This is a CLI-first project, so screenshots are optional. For a portfolio preview, show `smart-compressor inspect archive.zip` beside a successful `compress` command rather than a fabricated GUI.
-
-### Security and privacy
-
-All processing is local. Archive member paths are resolved and verified to remain inside the requested extraction directory. TAR links and special entries are rejected. Existing files are protected unless overwrite is explicitly enabled. Unknown archives can still be compression bombs and consume large amounts of CPU, memory, or disk; this tool does not impose resource quotas.
-
-### Limitations
-
-- No RAR, 7z, Zstandard, encrypted archives, or password support.
-- No GUI.
-- No split/multipart archives.
-- Compression-bomb resource limits are not enforced.
-- Extraction is fail-fast, not transactional: files extracted before a later error are not rolled back.
-- ZIP uses Deflate from Python's standard library rather than format-specific image/video recompression.
-
-### Optional roadmap
-
-Potential future work includes streaming progress callbacks, explicit resource limits, and an optional desktop UI. These are not current features.
-
-### Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md). Security guidance is in [SECURITY.md](SECURITY.md).
-
-### License
-
-MIT — see [LICENSE](LICENSE).
-
-### Author
-
-**Radwan Abdulhadi Ahmed**  
-**رضوان عبدالهادي أحمد**  
-GitHub: **@rad03i2**
+</div>
 
 ---
 
-## العربية
+## One toolkit for archive work
 
-### نظرة عامة
+**Smart Compressor** is a local Python CLI and library for creating, inspecting, and safely extracting common archive formats using only the standard library at runtime.
 
-**Smart Compressor** أداة محلية وآمنة لضغط الملفات والمجلدات وفحص الأرشيفات وفكها من خلال واجهة أوامر واحدة وواجهة Python بسيطة. صُممت لمن يحتاج ضغطًا عمليًا دون رفع الملفات إلى السحابة أو تثبيت برامج ضغط خارجية أو حزم تشغيل إضافية.
+<div dir="rtl" align="right">
 
-### المميزات
+**باختصار:** أداة محلية لضغط الملفات والمجلدات وفحص الأرشيفات وفكها بأمان، من دون برامج ضغط خارجية أو خدمات سحابية أو اعتماديات تشغيل إضافية.
 
-- ضغط الملفات أو المجلدات بصيغة ZIP.
-- ضغط المجلدات بصيغ `.tar.gz` و`.tar.bz2` و`.tar.xz`.
-- ضغط الملف المفرد بصيغ `.gz` و`.bz2` و`.xz`.
-- فك آمن لجميع الصيغ المدعومة.
-- فحص الأرشيف دون فكّه وعرض عدد العناصر والحجم المضغوط وغير المضغوط ونسبة الضغط.
-- مستويات ضغط من `0` إلى `9` حيث تدعم الصيغة ذلك.
-- إخراج JSON للاستخدام في الأتمتة والسكربتات.
-- منع الاستبدال غير المقصود افتراضيًا.
-- إنشاء الأرشيف عبر ملف مؤقت ثم اعتماده لتقليل خطر ترك ناتج ناقص.
-- حماية من هجمات Zip Slip ومسارات `../` عند فك الضغط.
-- رفض الروابط الرمزية والصلبة والأجهزة والعناصر الخاصة داخل TAR.
-- لا Telemetry ولا اتصال شبكي ولا مفاتيح API ولا اعتماديات تشغيل خارجية.
+</div>
 
-### المتطلبات
+| Capability | Current behavior |
+|---|---|
+| Compression | ZIP · TAR.GZ · TAR.BZ2 · TAR.XZ · GZ · BZ2 · XZ |
+| Inspection | Member count · packed bytes · unpacked bytes · ratio |
+| Extraction | Supported formats with destination-boundary checks |
+| Path safety | Rejects archive members escaping the destination |
+| TAR safety | Rejects symlinks, hard links, devices, and special members |
+| Existing files | Protected unless overwrite is explicit |
+| Archive creation | Temporary file + atomic destination replace |
+| Automation | JSON output for CLI workflows |
+| Runtime | Python standard library only |
+| Network | No network client or API key required |
 
-Python 3.10 أو أحدث فقط. لا تحتاج إلى 7-Zip أو أدوات ضغط خارجية.
+---
 
-### التثبيت
+## Quick start
 
-```bash
+~~~bash
 git clone https://github.com/rad03i2/smart-compressor.git
 cd smart-compressor
+
 python -m pip install -e .
-```
+~~~
 
-### أمثلة الاستخدام
+Create a ZIP archive:
 
-```bash
-smart-compressor compress ./photos ./photos.zip
-smart-compressor compress ./project ./project.tar.xz --level 9
-smart-compressor compress report.csv report.csv.gz --level 9
-smart-compressor inspect ./photos.zip
-smart-compressor inspect ./photos.zip --json
-smart-compressor extract ./photos.zip ./restored
-```
+~~~bash
+smart-compressor compress ./documents ./documents.zip
+~~~
 
-يتم تحديد صيغة الضغط من امتداد ملف الإخراج. الاستبدال لا يحدث تلقائيًا؛ استخدم `--overwrite` فقط عندما تريد ذلك صراحةً.
+Create a high-level XZ stream for one file:
 
-### الإعداد
+~~~bash
+smart-compressor compress report.csv report.csv.xz --level 9
+~~~
 
-لا يوجد ملف إعدادات أو `.env` لأن المشروع لا يحتاج أسرارًا أو خدمات خارجية. جميع الخيارات واضحة في سطر الأوامر أو معاملات واجهة Python.
+Create a TAR.XZ directory archive:
 
-### بنية المشروع
+~~~bash
+smart-compressor compress ./project ./project.tar.xz
+~~~
 
-المحرك موجود في `src/smart_compressor/core.py`، وواجهة الأوامر في `cli.py`، والاختبارات الوظيفية والأمنية في `tests/test_core.py`، وCI في `.github/workflows/ci.yml`.
+Inspect without extracting:
 
-### الاختبارات
+~~~bash
+smart-compressor inspect ./documents.zip
+smart-compressor inspect ./documents.zip --json
+~~~
 
-```bash
+Extract safely:
+
+~~~bash
+smart-compressor extract ./documents.zip ./restored
+~~~
+
+Use overwrite only when replacement is intentional:
+
+~~~bash
+smart-compressor extract ./documents.zip ./restored --overwrite
+~~~
+
+---
+
+## Supported formats
+
+### Directories
+
+| Suffix | Container / compression |
+|---|---|
+| <code>.zip</code> | ZIP with Deflate |
+| <code>.tar.gz</code> / <code>.tgz</code> | TAR + gzip |
+| <code>.tar.bz2</code> / <code>.tbz2</code> | TAR + bzip2 |
+| <code>.tar.xz</code> / <code>.txz</code> | TAR + xz |
+
+### Individual files
+
+In addition to ZIP and TAR-based outputs where applicable, individual files can use:
+
+- <code>.gz</code>
+- <code>.bz2</code>
+- <code>.xz</code>
+
+The output format is inferred from the destination filename.
+
+> The <code>--level 0-9</code> option affects formats where the underlying standard-library API exposes that level in the current implementation. TAR-compressed modes currently use the standard-library defaults.
+
+---
+
+## Archive safety model
+
+~~~text
+archive
+  │
+  ├─ enumerate members
+  ├─ resolve each target under destination
+  ├─ reject path traversal
+  ├─ TAR: reject links and special members
+  ├─ protect existing files by default
+  └─ stream accepted file contents
+        │
+        v
+   destination
+~~~
+
+The extraction logic is designed to prevent classic <code>../</code> path traversal / Zip Slip behavior.
+
+However, archive safety is broader than path traversal. Unknown archives can still consume excessive CPU, memory, or disk through compression-bomb behavior. Smart Compressor currently does **not** enforce resource quotas.
+
+See [SECURITY.md](SECURITY.md).
+
+---
+
+## Inspect before extracting
+
+~~~bash
+smart-compressor inspect backup.tar.xz
+~~~
+
+Example fields reported:
+
+~~~text
+Archive: /path/to/backup.tar.xz
+Format: tar.xz
+Members: ...
+Packed: ... bytes
+Unpacked: ... bytes
+Ratio: ...
+~~~
+
+For automation:
+
+~~~bash
+smart-compressor inspect backup.tar.xz --json
+~~~
+
+The ratio represents packed bytes divided by unpacked bytes. It is an archive-size metric, not a universal measure of content quality or compression efficiency.
+
+---
+
+## Python API
+
+~~~python
+from smart_compressor import compress, extract, inspect_archive
+
+info = compress("documents", "documents.zip", level=6)
+
+print(info.members)
+print(info.packed_bytes)
+print(info.unpacked_bytes)
+print(info.ratio)
+
+extract("documents.zip", "restored")
+
+archive = inspect_archive("documents.zip")
+print(archive.to_dict())
+~~~
+
+The public API exports:
+
+- <code>compress()</code>
+- <code>extract()</code>
+- <code>inspect_archive()</code>
+- <code>CompressionError</code>
+
+---
+
+## Quality checks
+
+~~~bash
 python -m compileall -q src tests
 python -m unittest discover -s tests -v
 smart-compressor --version
-```
+~~~
 
-تغطي الاختبارات دورة الضغط والفك لـZIP وGZIP وTAR.XZ، وحماية الاستبدال، والتحقق من المستوى، ومحاولة Zip Slip. ويُشغّل CI الاختبارات على Linux وWindows وmacOS مع عدة إصدارات Python.
+The GitHub Actions matrix runs these checks on **Ubuntu, Windows, and macOS** with Python **3.10, 3.12, and 3.13**.
 
-### المعاينة والصور
+Current regression tests cover ZIP round-trip behavior, single-file GZIP, TAR.XZ, overwrite protection, invalid levels, and a Zip Slip attempt.
 
-المشروع موجّه لسطر الأوامر، لذلك لا يحتاج إلى صور واجهة. عند عرضه في Portfolio يُفضّل تصوير أمر `inspect` وأمر ضغط ناجح بدل إضافة واجهة رسومية غير موجودة.
+---
 
-### الأمان والخصوصية
+## Repository map
 
-كل المعالجة محلية. يتم التأكد من أن كل مسار مستخرج يبقى داخل مجلد الوجهة، وتُرفض العناصر الخاصة والروابط في TAR. مع ذلك، قد تستهلك الأرشيفات الخبيثة من نوع compression bomb موارد كبيرة؛ المشروع لا يفرض حاليًا حدودًا على الموارد.
+~~~text
+smart-compressor/
+├── assets/
+│   ├── project-cover.svg       Archive Forge repository hero
+│   └── project-logo.svg        square project mark
+├── docs/
+│   ├── ARCHITECTURE.md         compression and extraction internals
+│   └── BRAND.md                visual identity rules
+├── src/smart_compressor/
+│   ├── __init__.py             public Python API
+│   ├── core.py                 compression, inspection, extraction
+│   └── cli.py                  command-line interface
+├── tests/
+│   └── test_core.py            functional + security regressions
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   ├── CODEOWNERS
+│   └── workflows/ci.yml
+├── README_EN.md
+├── README_AR.md
+├── CHANGELOG.md
+├── SUPPORT.md
+├── SECURITY.md
+├── CONTRIBUTING.md
+└── LICENSE
+~~~
 
-### القيود
+---
 
-- لا يدعم RAR أو 7z أو Zstandard أو الأرشيفات المشفرة وكلمات المرور.
-- لا توجد واجهة رسومية.
-- لا يدعم الأرشيفات المجزأة متعددة الأجزاء.
-- لا يفرض حدودًا تلقائية ضد compression bombs.
-- فك الضغط fail-fast وليس معاملة قابلة للتراجع؛ الملفات التي فُكت قبل خطأ لاحق لا تُحذف تلقائيًا.
-- لا يعيد ضغط محتوى الصور أو الفيديو بترميزات خاصة؛ ZIP يستخدم Deflate القياسي.
+## Current boundaries
 
-### تطوير اختياري مستقبلًا
+Smart Compressor currently does **not** provide:
 
-يمكن مستقبلًا إضافة عرض تقدم streaming وحدود موارد صريحة وواجهة سطح مكتب اختيارية. هذه ليست ميزات حالية.
+- RAR or 7z support;
+- Zstandard support;
+- password-protected or encrypted archives;
+- split / multipart archives;
+- a desktop GUI;
+- automatic compression-bomb resource limits;
+- rollback of files already extracted before a later fail-fast error.
 
-### المساهمة
+It also does not perform media-specific recompression of images, video, or audio. ZIP compression uses standard Deflate behavior rather than re-encoding the underlying media.
 
-راجع [CONTRIBUTING.md](CONTRIBUTING.md)، وإرشادات الأمان في [SECURITY.md](SECURITY.md).
+---
 
-### الترخيص
+## Project identity
 
-MIT — راجع [LICENSE](LICENSE).
+<img src="assets/project-logo.svg" alt="Smart Compressor logo" width="132" align="right" />
 
-### المؤلف
+The **Archive Forge** identity represents data streams converging into a compact archive core. Electric cyan represents structure and verified boundaries; warm copper represents compression and transformation.
 
-**Radwan Abdulhadi Ahmed**  
-**رضوان عبدالهادي أحمد**  
-GitHub: **@rad03i2**
+**Developer:** **Radwan Abd alhady Ahmed** · **رضوان عبدالهادي**  
+GitHub: [@rad03i2](https://github.com/rad03i2)
+
+<br clear="right"/>
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE).

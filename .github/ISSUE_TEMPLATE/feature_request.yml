@@ -1,0 +1,48 @@
+name: Feature request
+description: Propose a focused Smart Compressor improvement
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What workflow problem would this feature solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed capability
+      description: Describe the smallest useful implementation.
+    validations:
+      required: true
+  - type: dropdown
+    id: format
+    attributes:
+      label: Does this add or change archive-format support?
+      options:
+        - "No"
+        - "Yes"
+        - "Unsure"
+    validations:
+      required: true
+  - type: dropdown
+    id: dependencies
+    attributes:
+      label: Would this require a new runtime dependency?
+      options:
+        - "No"
+        - "Yes"
+        - "Unsure"
+    validations:
+      required: true
+  - type: textarea
+    id: security
+    attributes:
+      label: Security / extraction implications
+      description: Mention path handling, overwrite behavior, resource limits, or untrusted-archive concerns where relevant.
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+<title id="title">Smart Compressor logo</title>
+<desc id="desc">A compact archive core with converging compression rails in cyan and copper.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#071116"/>
+    <stop offset="1" stop-color="#112A34"/>
+  </linearGradient>
+  <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#5AF2E9"/>
+    <stop offset="1" stop-color="#16BFC4"/>
+  </linearGradient>
+  <linearGradient id="copper" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FFC06A"/>
+    <stop offset="1" stop-color="#FF8B2C"/>
+  </linearGradient>
+  <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%">
+    <feDropShadow dx="0" dy="25" stdDeviation="30" flood-color="#000" flood-opacity=".48"/>
+  </filter>
+</defs>
+
+<rect width="512" height="512" rx="112" fill="url(#bg)"/>
+<circle cx="410" cy="94" r="118" fill="#22D3D0" fill-opacity=".07"/>
+<circle cx="88" cy="425" r="110" fill="#FF9D42" fill-opacity=".06"/>
+
+<g filter="url(#shadow)">
+  <rect x="142" y="118" width="228" height="276" rx="46" fill="#0C1B22" stroke="#FFFFFF" stroke-opacity=".12" stroke-width="3"/>
+  <rect x="178" y="154" width="156" height="204" rx="34" fill="#102730" stroke="url(#cyan)" stroke-width="7"/>
+
+  <path d="M105 186h63M105 256h63M105 326h63" stroke="#FF9D42" stroke-width="11" stroke-linecap="round"/>
+  <path d="M344 186h63M344 256h63M344 326h63" stroke="#5AF2E9" stroke-width="11" stroke-linecap="round"/>
+
+  <path d="M138 166 177 186M138 236l39 20M138 306l39 20" fill="none" stroke="#F4F7F6" stroke-opacity=".32" stroke-width="5" stroke-linecap="round"/>
+  <path d="M374 166 335 186M374 236l-39 20M374 306l-39 20" fill="none" stroke="#F4F7F6" stroke-opacity=".32" stroke-width="5" stroke-linecap="round"/>
+
+  <path d="M210 198h92M210 232h92M210 266h92M210 300h92" stroke="#5AF2E9" stroke-opacity=".78" stroke-width="10" stroke-linecap="round"/>
+  <path d="M232 181v136M280 181v136" stroke="#FF9D42" stroke-opacity=".58" stroke-width="7" stroke-linecap="round"/>
+</g>
+</svg>
